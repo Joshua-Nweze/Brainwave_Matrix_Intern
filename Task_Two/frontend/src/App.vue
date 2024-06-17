@@ -1,10 +1,19 @@
 <script setup lang="ts">
-// import { RouterLink, RouterView } from 'vue-router'
-// import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
+import Nav from './components/Nav.vue'
+import Footer from './components/Footer.vue'
 </script>
 
 <template>
-  
+  <div>
+    <Nav />
+
+    <div class="px-6 lg:px-40">
+      <RouterView />
+    </div>
+
+    <Footer />
+  </div>
 </template>
 
 <style scoped>

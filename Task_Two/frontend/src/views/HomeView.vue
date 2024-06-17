@@ -1,9 +1,19 @@
-<script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div>
+    <div class="mt-8 block lg:hidden">
+      <SearchBar />
+    </div>
+
+    <div class="mt-8">
+      <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-3 py-1.5 rounded dark:bg-blue-900 dark:text-blue-300">Default</span>
+      <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1.5 rounded dark:bg-gray-700 dark:text-gray-300">Dark</span>
+    </div>
+
+    <Blogs />
+  </div>
 </template>
+
+<script setup lang="ts">
+import Blogs from '../components/Blogs.vue'
+import SearchBar from '../components/SearchBar.vue'
+</script>
