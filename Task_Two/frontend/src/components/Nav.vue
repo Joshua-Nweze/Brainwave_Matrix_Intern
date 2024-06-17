@@ -4,7 +4,8 @@
             <div class="relative grid grid-cols-2 lg:grid-cols-3 h-16 items-center">
                 <div class="flex items-center justify-start items-stretch lg:justify-start">
                     <div class="flex flex-shrink-0 items-center">
-                        <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+                        <img class="mx-auto h-16 w-auto" src="/logo-white.png" alt="logo">
+                        <span class="hidden md:block ms-3 text-xl text-white">vBlog</span>
                     </div>
                 </div>
 
