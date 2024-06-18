@@ -1,6 +1,6 @@
 <template>
-    <div class="grid lg:grid-cols-3">
-        <div class="hidden lg:block col-span-2">
+    <div class="grid lg:grid-cols-2">
+        <div class="hidden lg:block">
             <img src="/Secure data-bro.svg"  alt="">
         </div>
         <div>
