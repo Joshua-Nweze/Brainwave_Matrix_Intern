@@ -14,11 +14,11 @@
                     <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
                         <form class="space-y-4">    
                             <div>
-                                <input name="email" type="email" placeholder="Email"required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                <input name="email" type="email" placeholder="Email"required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                             </div>
     
                             <div>
-                                <input name="password" type="password" placeholder="Password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                <input name="password" type="password" placeholder="Password" required class="block text-base w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                             </div>
     
                             <div>
@@ -33,9 +33,12 @@
                         </div>
     
                         <div>
-                            <SignWithGoogleBtn text="Log in with Google"/>
+                            <SignWithGoogleBtn text="Continue with Google"/>
                         </div>
-    
+
+                        <div class="text-center text-sm mt-5">
+                            Dont' have an account? <RouterLink to="/signup" class="text-blue-600">Create an account</RouterLink>
+                        </div>
                     </div>
                 </div>
             </div>

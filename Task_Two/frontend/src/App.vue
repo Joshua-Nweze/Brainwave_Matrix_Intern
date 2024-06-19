@@ -6,9 +6,9 @@ import Footer from './components/Footer.vue'
 
 <template>
   <div class="flex flex-col min-h-screen">
-    <Nav />
+    <Nav class="fixed w-full"/>
 
-    <div class="px-6 lg:px-40 grow h-full flex flex-col justify-center">
+    <div class="px-6 lg:px-40 grow h-full flex flex-col justify-center text-lg mt-14">
       <RouterView />
     </div>
 

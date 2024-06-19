@@ -3,10 +3,10 @@
         <div class="mx-auto px-6 lg:px-40">
             <div class="relative grid grid-cols-2 lg:grid-cols-3 h-16 items-center">
                 <div class="flex items-center justify-start items-stretch lg:justify-start">
-                    <div class="flex flex-shrink-0 items-center">
+                    <RouterLink to="/" class="flex flex-shrink-0 items-center">
                         <img class="mx-auto h-16 w-auto" src="/logo-white.png" alt="logo">
                         <span class="hidden md:block ms-3 text-xl text-white">vBlog</span>
-                    </div>
+                    </RouterLink>
                 </div>
 
                 <div class="hidden lg:block">  
@@ -33,8 +33,12 @@
                         </div>
 
                         <div class="flex gap-3">
-                            <Button class="bg-blue-700 hover:bg-blue-800" text="Login" />
-                            <Button class="bg-white text-blue-700" text="Post a blog" />
+                            <RouterLink to="/login">
+                                <Button class="bg-blue-700 hover:bg-blue-800">Login</Button>
+                            </RouterLink>
+                            <RouterLink to="/signup">
+                                <Button class="bg-white text-blue-700">Post a blog</Button>
+                            </RouterLink>
                         </div>
                     </div>
                 </div>
