@@ -47,6 +47,10 @@
                         <div>
                             <SignWithGoogleBtn text="Continue with Google"/>
                         </div>
+
+                        <div class="text-center text-sm mt-5">
+                            Already have an account? <RouterLink to="/login" class="text-blue-600">Login</RouterLink>
+                        </div>
     
                     </div>
                 </div>
