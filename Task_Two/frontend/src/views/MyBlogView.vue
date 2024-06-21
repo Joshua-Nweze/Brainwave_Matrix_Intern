@@ -11,7 +11,7 @@
             </div>
             <div>text text tex</div>
 
-            <div class="mt-10 flex flex-col gap-3">
+            <div class="mt-16 flex flex-col gap-3">
                 <div class="text-slate-500 text-base">127 people like this blog</div>
             </div>
 
