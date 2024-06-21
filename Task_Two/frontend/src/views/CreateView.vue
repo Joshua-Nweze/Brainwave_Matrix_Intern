@@ -9,7 +9,7 @@
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Blog thumbnail</label>
                 <input required class="block w-full text-gray-900 border border-gray-300 rounded-md cursor-pointer py-1.5 bg-gray-50 focus:outline-none text-sm" id="file_input" type="file" accept="image/*">
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (max size 1mb).</p>
+                <p class="mt-1 text-sm text-gray-500 " id="file_input_help">SVG, PNG, JPG or GIF (max size 1mb).</p>
             </div>
 
             <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
@@ -18,6 +18,7 @@
             </select>
 
             <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Blog body</label>
                 <QuillEditor
                     :options="editorOptions"
                     ref="myEditor"
@@ -33,11 +34,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { QuillEditor } from "@vueup/vue-quill";
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import Button from "@/components/Button.vue";
-
 
 const myEditor = ref<InstanceType<typeof QuillEditor> | null>(null);
 const editorOptions = ref({
