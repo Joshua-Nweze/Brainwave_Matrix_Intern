@@ -21,9 +21,9 @@
                 </Button>
             </form>
 
-            <hr>
+            <hr class="my-10">
 
-            <form class="flex flex-col gap-5 mt-10">
+            <form class="flex flex-col gap-5">
                 <div>Change password</div>
                 <input placeholder="Current password" required class="block min-w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 px-2">
     
@@ -36,7 +36,7 @@
                 </Button>
             </form>
 
-            <hr>
+            <hr class="my-10">
 
             <div class="flex gap-3 items-center">
                 <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
@@ -47,7 +47,7 @@
             <div class="bg-red-100 text-red-500 rounded-lg px-5 py-7">
                 <div>Delete account</div>
                 <div class="text-base">By deleting your account, all your blogs will be deleted. This action is irreversible</div>
-                <Button class="text-red-500 ring-1 ring-red-500 mt-5 hover:bg-red-200" @click="showDelModal = true">Delete account</Button>
+                <Button class="text-red-700 ring-1 ring-red-500 mt-5 hover:bg-red-200" @click="showDelModal = true">Delete account</Button>
             </div>
 
         </div>
