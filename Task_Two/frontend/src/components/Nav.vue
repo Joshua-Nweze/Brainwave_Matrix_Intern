@@ -19,7 +19,7 @@
                             <Button class="bg-blue-700 hover:bg-blue-800">Login</Button>
                         </RouterLink>
                         <RouterLink to="/signup">
-                            <Button class="bg-white text-blue-500">Post a blog</Button>
+                            <Button class="bg-white text-blue-700">Post a blog</Button>
                         </RouterLink>
                         <div v-show="true" @mouseover="showProfileDropdown = true" @mouseleave="showProfileDropdown = false">
                             <div>
