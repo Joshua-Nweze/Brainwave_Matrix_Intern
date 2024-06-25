@@ -37,6 +37,104 @@ async function createBlog(req, res) {
         }
     }
 }
+async function likeBlog(req, res) {
+    try {
+        let { blogId, userId } = req.body;
+        let blog = await Blog.findById(blogId);
+        if (blog) {
+            const alreadyLiked = blog.likedBy.some((likedBy) => likedBy.id === userId);
+            if (alreadyLiked) {
+                // remove like if user already likes blog
+                const ublikeBlog = await Blog.findByIdAndUpdate(blogId, {
+                    $inc: { likes: -1 },
+                    $pull: { likedBy: { id: userId } }
+                }, { new: true });
+                if (ublikeBlog) {
+                    res.status(200).json({ msg: "Like removed." });
+                    return;
+                }
+                else {
+                    res.status(500).json({ msg: "Something went wrong, try again later." });
+                    return;
+                }
+            }
+            else {
+                // Increment the likes and add the user to likedBy array
+                const likeBlog = await Blog.findByIdAndUpdate(blogId, {
+                    $inc: { likes: 1 },
+                    $push: { likedBy: { id: userId } }
+                }, { new: true });
+                if (likeBlog) {
+                    res.status(200).json({ msg: "Liked." });
+                    return;
+                }
+                else {
+                    res.status(500).json({ msg: "Something went wrong, try again later." });
+                    return;
+                }
+            }
+        }
+        else {
+            res.status(404).json({ msg: "Blog not found." });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: "Something went wrong, try again later.",
+        });
+    }
+}
+async function commentBlog(req, res) {
+    try {
+        // let { id, name: profilePic, comment, blogId } = req.body
+        let commentData = req.body;
+        let blog = await Blog.findById(commentData.blogId);
+        if (blog) {
+            const comment = await Blog.findByIdAndUpdate(commentData.blogId, {
+                $push: { comments: {
+                        id: commentData.id,
+                        name: commentData.name,
+                        profilePic: commentData.profilePic,
+                        comment: commentData.comment
+                    } }
+            }, { new: true });
+            if (comment) {
+                res.status(200).json({ msg: "Comment posted." });
+                return;
+            }
+            else {
+                res.status(500).json({ msg: "Something went wrong, try again later." });
+                return;
+            }
+        }
+        else {
+            res.status(404).json({ msg: "Blog not found." });
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Something went wrong, try again later.",
+        });
+    }
+}
+async function deleteComment(req, res) {
+    try {
+        let { blogId, commentId, userId } = req.body;
+        let blog = await Blog.findById(blogId);
+        if (!blog) {
+            res.status(404).json({ msg: "Blog not found" });
+            return;
+        }
+        blog.comments;
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: "Something went wrong, try again later.",
+        });
+    }
+}
 async function deleteBlog(req, res) {
     try {
         let { blogId, id } = req.body;
@@ -62,6 +160,8 @@ async function deleteBlog(req, res) {
 }
 export default {
     createBlog,
-    deleteBlog
+    deleteBlog,
+    likeBlog,
+    commentBlog
 };
 //# sourceMappingURL=blog.controller.js.map

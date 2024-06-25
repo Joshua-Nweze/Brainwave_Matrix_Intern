@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
 import blogRoutes from './routes/blog.routes.js';
+import unAuthRoutes from './routes/unAuthUser.routes.js';
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,7 @@ app.use(cors({
 }));
 app.use('/api/auth', authRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api', unAuthRoutes);
 if (!process.env.DB_URI) {
     throw new Error('DB_URI environment variable is not defined');
 }
