@@ -45,12 +45,12 @@ async function likeBlog(req, res) {
             const alreadyLiked = blog.likedBy.some((likedBy) => likedBy.id === userId);
             if (alreadyLiked) {
                 // remove like if user already likes blog
-                const ublikeBlog = await Blog.findByIdAndUpdate(blogId, {
+                const unlikeBlog = await Blog.findByIdAndUpdate(blogId, {
                     $inc: { likes: -1 },
                     $pull: { likedBy: { id: userId } }
                 }, { new: true });
-                if (ublikeBlog) {
-                    res.status(200).json({ msg: "Like removed." });
+                if (unlikeBlog) {
+                    res.status(200).json({ msg: "Like removed.", likes: unlikeBlog.likes });
                     return;
                 }
                 else {
@@ -65,7 +65,7 @@ async function likeBlog(req, res) {
                     $push: { likedBy: { id: userId } }
                 }, { new: true });
                 if (likeBlog) {
-                    res.status(200).json({ msg: "Liked." });
+                    res.status(200).json({ msg: "Liked.", likes: likeBlog.likes });
                     return;
                 }
                 else {
@@ -100,7 +100,7 @@ async function commentBlog(req, res) {
                     } }
             }, { new: true });
             if (comment) {
-                res.status(200).json({ msg: "Comment posted." });
+                res.status(200).json({ msg: "Comment posted.", comments: comment.comments });
                 return;
             }
             else {
@@ -121,12 +121,30 @@ async function commentBlog(req, res) {
 async function deleteComment(req, res) {
     try {
         let { blogId, commentId, userId } = req.body;
+        if (!blogId || !commentId || !userId) {
+            res.status(400).json({ msg: "Missign re.body values." });
+            return;
+        }
         let blog = await Blog.findById(blogId);
         if (!blog) {
             res.status(404).json({ msg: "Blog not found" });
             return;
         }
-        blog.comments;
+        const updatedComments = await Blog.findByIdAndUpdate(blogId, {
+            $pull: { comments: { _id: commentId, id: userId } }
+        }, { new: true } // Return the updated document
+        );
+        if (updatedComments) {
+            res.status(200).json({
+                msg: "Comment deleted.",
+                comments: updatedComments.comments
+            });
+        }
+        else {
+            res.status(500).json({
+                msg: "Something went wrong, try again later.",
+            });
+        }
     }
     catch (error) {
         console.log(error);
@@ -158,10 +176,46 @@ async function deleteBlog(req, res) {
         res.status(500).json({ msg: "Something went wrong, try again later." });
     }
 }
+async function editBlog(req, res) {
+    try {
+        if (req.body && typeof req.body === "object") {
+            let blogData = req.body;
+            let { blogId } = req.body;
+            let blog = await Blog.findById(blogId);
+            if (!blog) {
+                res.status(404).json({ msg: "Blog not found." });
+                return;
+            }
+            // check if user is owner of blog
+            if (blog.id != blogData.id) {
+                res.status(403).json({ msg: "You do not have access to perform this action." });
+                return;
+            }
+            // delete existing thumbnail if thumbnail is updated
+            if (req.file) {
+                fs.unlinkSync(blog.thumbnail);
+                blogData.thumbnail = req.file?.path;
+            }
+            let updateBlog = await Blog.findByIdAndUpdate(blogId, blogData, { new: true });
+            if (updateBlog) {
+                res.status(200).json({ msg: "Blog updated.", blog: updateBlog });
+            }
+            else {
+                res.status(500).json({ msg: "Something went wrong, try again later." });
+            }
+        }
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Something went wrong, try again later." });
+    }
+}
 export default {
     createBlog,
     deleteBlog,
     likeBlog,
-    commentBlog
+    commentBlog,
+    deleteComment,
+    editBlog
 };
 //# sourceMappingURL=blog.controller.js.map

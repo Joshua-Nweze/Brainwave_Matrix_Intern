@@ -23,6 +23,14 @@ export interface IBlog extends Document {
     comments: IComment[];
 }
 
+const commentSchema = new Schema<IComment>({
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    profilePic: { type: String, required: true },
+    comment: { type: String, required: true },
+    created_at: { type: Date, default: Date.now() }
+});
+
 let blogSchema = new Schema<IBlog>({
     id: {
         type: String,
@@ -49,18 +57,7 @@ let blogSchema = new Schema<IBlog>({
         type: [{ id: { type: String, required: true } }],
         default: []
     },
-    comments: {
-        type: [
-            {
-                id: { type: String, required: true },
-                name: { type: String, required: true },
-                profilePic: { type: String, required: true },
-                comment: { type: String, required: true },
-                created_at: { type: Date, default: Date.now() }
-            },
-        ],
-        default: [],
-    },
+    comments: [commentSchema]
 }, { timestamps: true });
 
 let Blog = mongoose.model<IBlog>("Blog", blogSchema);

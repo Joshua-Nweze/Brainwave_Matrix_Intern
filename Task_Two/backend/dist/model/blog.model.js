@@ -1,4 +1,11 @@
 import mongoose, { Schema } from "mongoose";
+const commentSchema = new Schema({
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    profilePic: { type: String, required: true },
+    comment: { type: String, required: true },
+    created_at: { type: Date, default: Date.now() }
+});
 let blogSchema = new Schema({
     id: {
         type: String,
@@ -25,18 +32,7 @@ let blogSchema = new Schema({
         type: [{ id: { type: String, required: true } }],
         default: []
     },
-    comments: {
-        type: [
-            {
-                id: { type: String, required: true },
-                name: { type: String, required: true },
-                profilePic: { type: String, required: true },
-                comment: { type: String, required: true },
-                created_at: { type: Date, default: Date.now() }
-            },
-        ],
-        default: [],
-    },
+    comments: [commentSchema]
 }, { timestamps: true });
 let Blog = mongoose.model("Blog", blogSchema);
 export default Blog;

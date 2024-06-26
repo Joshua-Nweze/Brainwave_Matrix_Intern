@@ -53,7 +53,7 @@ async function likeBlog(req: Request, res: Response) {
 
             if (alreadyLiked) {
                 // remove like if user already likes blog
-                const ublikeBlog = await Blog.findByIdAndUpdate(
+                const unlikeBlog = await Blog.findByIdAndUpdate(
                     blogId,
                     {
                         $inc: { likes: -1 },
@@ -62,8 +62,8 @@ async function likeBlog(req: Request, res: Response) {
                     { new: true }
                 );
 
-                if (ublikeBlog) {
-                    res.status(200).json({ msg: "Like removed." })
+                if (unlikeBlog) {
+                    res.status(200).json({ msg: "Like removed.", likes: unlikeBlog.likes })
                     return
                 } else {
                     res.status(500).json({ msg: "Something went wrong, try again later." })
@@ -81,7 +81,7 @@ async function likeBlog(req: Request, res: Response) {
                 );
 
                 if (likeBlog) {
-                    res.status(200).json({ msg: "Liked." })
+                    res.status(200).json({ msg: "Liked.", likes: likeBlog.likes })
                     return
                 } else {
                     res.status(500).json({ msg: "Something went wrong, try again later." })
@@ -122,7 +122,7 @@ async function commentBlog(req: Request, res: Response) {
             );
 
             if (comment) {
-                res.status(200).json({ msg: "Comment posted." })
+                res.status(200).json({ msg: "Comment posted.", comments: comment.comments })
                 return
             } else {
                 res.status(500).json({ msg: "Something went wrong, try again later." })
@@ -143,6 +143,11 @@ async function deleteComment(req: Request, res:Response) {
     try {
         let { blogId, commentId, userId } = req.body
 
+        if(!blogId || !commentId || !userId) {
+            res.status(400).json({ msg: "Missign re.body values." })
+            return
+        }
+
         let blog = await Blog.findById(blogId)
 
         if (!blog) {
@@ -150,7 +155,24 @@ async function deleteComment(req: Request, res:Response) {
             return
         }
 
-        blog.comments
+        const updatedComments = await Blog.findByIdAndUpdate(
+            blogId,
+            {
+                $pull: { comments: { _id: commentId, id: userId } }
+            },
+            { new: true } // Return the updated document
+        );
+         
+        if (updatedComments) {
+            res.status(200).json({
+                msg: "Comment deleted.",
+                comments: updatedComments.comments
+            })
+        } else {
+            res.status(500).json({
+                msg: "Something went wrong, try again later.",
+            })
+        }
     } catch (error) {
         console.log(error)
         res.status(500).json({
@@ -184,9 +206,48 @@ async function deleteBlog(req: Request, res:Response) {
     }
 }
 
+async function editBlog(req: Request, res: Response) {
+    try {
+        if (req.body && typeof req.body === "object") {
+            let blogData: Partial<IBlog> = req.body as Partial<IBlog>
+            let { blogId } = req.body
+
+            let blog = await Blog.findById(blogId)
+
+            if (!blog) {
+                res.status(404).json({ msg: "Blog not found." });
+                return
+            }
+            // check if user is owner of blog
+            if (blog.id != blogData.id) {
+                res.status(403).json({ msg: "You do not have access to perform this action." });    
+                return
+            }
+            // delete existing thumbnail if thumbnail is updated
+            if (req.file) {
+                fs.unlinkSync(blog.thumbnail)
+                blogData.thumbnail = req.file?.path
+            }
+
+            let updateBlog = await Blog.findByIdAndUpdate(blogId, blogData, { new: true })
+
+            if (updateBlog) {
+                res.status(200).json({ msg: "Blog updated.", blog: updateBlog });
+            } else {
+                res.status(500).json({ msg: "Something went wrong, try again later." });
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Something went wrong, try again later." });
+    }
+}
+
 export default {
     createBlog,
     deleteBlog,
     likeBlog,
-    commentBlog
+    commentBlog,
+    deleteComment,
+    editBlog
 }
