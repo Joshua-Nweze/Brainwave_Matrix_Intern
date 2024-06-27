@@ -97,8 +97,8 @@ async function deleteAccount(req, res) {
                 if (allUserBlogs && allUserBlogs.length > 0) {
                     for (const blog of allUserBlogs) {
                         // delete all user blogs and blog thumbnails
-                        if (blog.thumbnail && fs.existsSync(blog.thumbnail)) {
-                            fs.unlinkSync(blog.thumbnail);
+                        if (blog.thumbnail && fs.existsSync(blog.thumbnail.path)) {
+                            fs.unlinkSync(blog.thumbnail.path);
                         }
                         await Blog.findByIdAndDelete(blog._id);
                     }
@@ -124,9 +124,96 @@ async function deleteAccount(req, res) {
         res.status(500).json({ msg: "Something went wrong, try again later." });
     }
 }
+async function getUser(req, res) {
+    try {
+        let { email } = req.query;
+        let user = await User.findOne({ email }).select('-password -createdAt -updatedAt');
+        if (user) {
+            res.status(200).json({ msg: user });
+        }
+        else {
+            res.status(404).json({ msg: 'User not found.' });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ msg: "Something went wrong, try again later." });
+    }
+}
+async function changePassword(req, res) {
+    try {
+        let { currPassword, newPassword, confirmNewPassword, userId } = req.body;
+        let user = await User.findById(userId);
+        if (user) {
+            if (newPassword != confirmNewPassword) {
+                res.status(400).json({ msg: "New password and new password confirmation must match." });
+                return;
+            }
+            let confirmPassword = await bcrypt.compare(currPassword, user.password);
+            if (!confirmPassword) {
+                res.status(401).json({ msg: "Incorrect password." });
+                return;
+            }
+            let hashedPwd = await bcrypt.hash(newPassword, 10);
+            let updatePwd = await User.findByIdAndUpdate(userId, {
+                password: hashedPwd
+            });
+            if (updatePwd) {
+                res.status(200).json({ msg: "Password updated." });
+                return;
+            }
+            else {
+                res.status(500).json({ msg: "Something went wrong, try again later." });
+                return;
+            }
+        }
+        else {
+            res.status(404).json({ msg: "User not found." });
+            return;
+        }
+    }
+    catch (error) {
+        res.status(500).json({ msg: "Something went wrong, try again later." });
+    }
+}
+async function editAccount(req, res) {
+    try {
+        let { firstName, lastName, userId } = req.body;
+        let data = {
+            firstName,
+            lastName
+        };
+        if (req.file) {
+            const profilePicPath = req.file.path;
+            const imageBuffer = fs.readFileSync(profilePicPath);
+            // Encode the image buffer as a Base64 string
+            const imageBase64 = imageBuffer.toString('base64');
+            data = {
+                firstName,
+                lastName,
+                profilePic: {
+                    path: profilePicPath,
+                    imageBase64: imageBase64
+                }
+            };
+        }
+        let updateUser = await User.findByIdAndUpdate(userId, data);
+        if (updateUser) {
+            res.status(200).json({ msg: "Account updated" });
+        }
+        else {
+            res.status(404).json({ msg: 'User not found.' });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ msg: "Something went wrong, try again later." });
+    }
+}
 export default {
     createAccount,
     login,
-    deleteAccount
+    deleteAccount,
+    getUser,
+    editAccount,
+    changePassword
 };
 //# sourceMappingURL=auth.controller.js.map

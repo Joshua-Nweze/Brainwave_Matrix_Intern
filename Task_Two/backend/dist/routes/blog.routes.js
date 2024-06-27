@@ -2,7 +2,7 @@ import express from 'express';
 import blogController from '../controllers/blog.controller.js';
 import multerFuncs from '../utils/multer.js';
 let { uploadThumbnail } = multerFuncs;
-let { createBlog, deleteBlog, likeBlog, commentBlog, deleteComment, editBlog } = blogController;
+let { createBlog, deleteBlog, likeBlog, commentBlog, deleteComment, editBlog, getUserBlogs } = blogController;
 let router = express.Router();
 let blogThumbnailUploadr = uploadThumbnail.single('thumbnail');
 router.post('/create', (req, res) => {
@@ -25,5 +25,6 @@ router.patch('/edit', (req, res) => {
         editBlog(req, res);
     });
 });
+router.get('/my-blogs', (req, res) => getUserBlogs(req, res));
 export default router;
 //# sourceMappingURL=blog.routes.js.map

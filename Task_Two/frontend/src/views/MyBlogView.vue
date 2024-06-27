@@ -1,18 +1,18 @@
 <template>
-    <div class="grid my-10 lg:mx-40">
+    <div class="grid my-10 lg:mx-40" v-if="blog">
         <div class="flex gap-5 mb-5">
             <Button class="bg-blue-700 hover:bg-blue-800" @click="showEditModal = true">Edit blog</Button>
             <Button class="bg-red-700 hover:bg-red-800" @click="showDelModal = true">Delete blog</Button>
         </div>
         <div>
-            <div class="font-medium text-2xl lg:text-4xl">title</div>
+            <div class="font-medium text-2xl lg:text-4xl">{{ blog?.title }}</div>
             <div>
-                <img src="/Secure data-bro.svg" alt="" />
+                <img :src="`data:image/jpeg;base64,${blog?.thumbnail.imageBase64}`" alt="" />
             </div>
-            <div>text text tex</div>
+            <div :innerHTML="blog?.body"></div>
 
             <div class="mt-16 flex flex-col gap-3">
-                <div class="text-slate-500 text-base">127 people like this blog</div>
+                <div class="text-slate-500 text-base">{{ blog?.likes }} {{ blog?.likes == 1 ? 'person' : 'people' }} like this blog</div>
             </div>
 
             <div>
@@ -22,43 +22,29 @@
                     <div>
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-lg lg:text-2xl font-bold text-gray-900 ">
-                                Comments (20)
+                                Comments ({{ blog?.comments.length }})
                             </h2>
                         </div>
-                        <article
-                            class="p-6 text-base bg-white rounded-lg"
-                        >
+                        <article class="p-6 text-base bg-white rounded-lg" v-if="blog?.comments.length" v-for="comment in blog?.comments">
                             <footer
-                                class="flex justify-between items-center mb-2"
-                            >
-                                <div class="flex items-center">
+                                class="flex justify-between items-center mb-2 w-full">
+                                <div class="flex items-center flex-2/3">
                                     <p
-                                        class="inline-flex items-center mr-3 text-sm text-gray-900 font-semibold"
-                                    >
+                                        class="inline-flex items-center mr-3 text-sm text-gray-900 font-semibold">
                                         <img
+                                            v-if="comment.profilePic"
                                             class="mr-2 w-6 h-6 rounded-full"
-                                            src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-                                            alt="Michael Gough"
-                                        />Michael Gough
+                                            :src="`data:image/jpeg;base64,${comment.profilePic}`"
+                                            alt=""
+                                        />
+                                        <img v-else class="h-6 w-6 rounded-full" :src="`https://ui-avatars.com/api/?name=${comment.name}&background=1d4ed8&color=ffffff`" alt="">
+                                        {{ comment.name }}
                                     </p>
-                                    <p
-                                        class="text-sm text-gray-600"
-                                    >
-                                        <time
-                                            pubdate
-                                            datetime="2022-02-08"
-                                            title="February 8th, 2022"
-                                            >Feb. 8, 2022</time
-                                        >
-                                    </p>
+                                    <p class="text-sm text-gray-600">{{ new Date(comment.created_at).toDateString() }}</p>
                                 </div>
                             </footer>
                             <p class="text-gray-500">
-                                Very straight-to-point article. Really worth
-                                time reading. Thank you! But tools are just the
-                                instruments for the UX designers. The knowledge
-                                of the design tools are as important as the
-                                creation of the design strategy.
+                                {{ comment.comment }}
                             </p>
                         </article>
                         
@@ -92,7 +78,8 @@
                                     </div>
                                 </div>
                                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete</button>
+                                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" 
+                                    @click="delBlog">Delete</button>
                                     <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="showDelModal = false">Cancel</button>
                                 </div>
                             </div>
@@ -105,7 +92,7 @@
         <!-- edit blog modal -->
         <Transition>
             <div v-if="showEditModal">
-                <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="relative z-40" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
     
                     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -113,19 +100,19 @@
                             <div class="relative w-screen transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8">
                                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                     <div class="sm:flex sm:items-start">
-                                        <form class="w-full flex flex-col gap-5">
+                                        <form class="w-full flex flex-col gap-5" @submit.prevent="edit">
                                             <div class="text-2xl md:text-4xl">Edit blog post</div>
                                             <div>
-                                                <input placeholder="Blog title" required class="block min-w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                                <input v-model="title"placeholder="Blog title" required class="block min-w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                                             </div>
 
                                             <div>
                                                 <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Blog thumbnail <span class="text-slate-400">(choose an image if you want to change blog thumbnail)</span></label>
-                                                <input required class="block w-full text-gray-900 border border-gray-300 rounded-md cursor-pointer py-1.5 bg-gray-50 focus:outline-none text-sm" id="file_input" type="file" accept="image/*">
+                                                <input @change="handleFileChange" class="block w-full text-gray-900 border border-gray-300 rounded-md cursor-pointer py-1.5 bg-gray-50 focus:outline-none text-sm" id="file_input" type="file" accept="image/*">
                                                 <p class="mt-1 text-sm text-gray-500 " id="file_input_help">SVG, PNG, JPG or GIF (max size 1mb).</p>
                                             </div>
 
-                                            <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                            <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" v-model="category" required>
                                                 <option selected value="">Choose blog category</option>
                                                 <option v-for="(category, index) in blogCategories" :value="category">{{ category }}</option>
                                             </select>
@@ -142,7 +129,7 @@
                                             </div>
 
                                             <div class="py-3 sm:flex sm:flex-row-reverse gap-3">
-                                                <Button class="bg-blue-700 hover:bg-blue-800 inline-flex w-full sm:w-auto">Update blog</Button>
+                                                <Button class="bg-blue-700 hover:bg-blue-800 inline-flex w-full sm:w-auto text-center" type="submit">Update blog</Button>
                                                 <Button type="button" class="ring-1 ring-gray-300 text-slate-600 hover:bg-gray-50 inline-flex w-full sm:w-auto" @click="showEditModal = false">Cancel</Button>
                                             </div>
 
@@ -156,13 +143,32 @@
             </div>
         </Transition>
     </div>
+    <MyBlogSkeletonLoader v-else/>
+    
+    <Transition>
+        <ToastNotification :feedback="feedback" v-if="feedback"/>
+    </Transition>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import Button from "@/components/Button.vue";
+import { useRoute } from "vue-router";
+import { useBlogStore } from "@/stores/useBlog";
+import type { IBlog } from '../types/BlogTypes'
+import MyBlogSkeletonLoader from "@/components/SkeletonLoaders/MyBlogSkeletonLoader.vue";
+import ToastNotification from "@/components/ToastNotification.vue";
+import router from "@/router";
+import { useAuthStore } from "@/stores/useAuth";
+import { storeToRefs } from "pinia";
+
+let authStore = useAuthStore()
+let { user } = storeToRefs(authStore)
+
+const blogStore = useBlogStore()
+let { getBlog, deleteBlog, editBlog } = blogStore
 
 let showDelModal = ref<boolean>(false)
 let showEditModal = ref<boolean>(false)
@@ -207,13 +213,73 @@ const editorOptions = ref({
 
 function handleTextChange() {
     if (myEditor.value) {
-        const editorHTML = myEditor.value.getHTML();
-        console.log(editorHTML)
+        body.value = myEditor.value.getHTML();
     }
 }
 function setEditorContents() {
-    myEditor.value?.setHTML('<b>hey bou</b>')
+    myEditor.value?.setHTML(body.value)
 }
+
+function handleFileChange (event: any) {
+    thumbnail = event.target.files[0];
+}
+
+let blog = ref<IBlog | null>(null)
+let blogId = useRoute().params.id as string
+
+let feedback = ref<any>(null)
+
+async function delBlog(){
+    let res = await deleteBlog(blogId)
+
+    if (res.status == 200) {
+        router.push('/my-blogs')
+    }
+
+    feedback.value = res
+
+    clearFeedBack()
+}
+
+
+let title = ref<string>(blog.value?.title as string)
+let category = ref<string>(blog.value?.category as string)
+let body = ref<string>(blog.value?.body as string)
+let thumbnail: any = null
+
+
+async function edit() {
+    let formData = new FormData()
+
+    formData.append('id', user.value?._id as string)
+    formData.append('title', title.value)
+    formData.append('category', category.value)
+    formData.append('thumbnail', thumbnail)
+    formData.append('body', body.value)
+    formData.append('blogId', blogId)
+
+    let res = await editBlog(formData)
+
+    blog.value = await getBlog(blogId)
+
+    feedback.value = res
+    
+    
+    clearFeedBack()    
+}
+
+function clearFeedBack() {
+    setTimeout(() => {
+        feedback.value = null
+    }, 3000)
+}
+onMounted(async () => {
+    blog.value = await getBlog(blogId)
+
+    title.value = blog.value?.title as string
+    category.value = blog.value?.category as string
+    body.value = blog.value?.body as string
+})
 </script>
 
 <style scoped></style>

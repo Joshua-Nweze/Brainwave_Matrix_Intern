@@ -1,13 +1,24 @@
 import mongoose, { Schema, Document }  from "mongoose";
 
+interface IProfilePic {
+    path: string;
+    imageBase64: string
+}
+
 export interface IUser extends Document {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
+    profilePic: IProfilePic;
     createdAt: Date;
     updatedAt: Date;
 }
+
+let profilePicSchema = new Schema<IProfilePic>({
+    path: { type: String, default: null },
+    imageBase64: { type: String, default: null },
+})
 
 let userSchema = new Schema<IUser>({
     firstName: {
@@ -22,6 +33,7 @@ let userSchema = new Schema<IUser>({
         type: String,
         required: [true, 'Email is required']
     },
+    profilePic: profilePicSchema,
     password: {
         type: String,
         required: [true, 'Password is required']

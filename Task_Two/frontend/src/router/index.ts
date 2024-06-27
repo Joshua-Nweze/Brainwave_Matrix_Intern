@@ -8,8 +8,14 @@ import MyBlogsView from '@/views/MyBlogsView.vue'
 import MyBlogView from '@/views/MyBlogView.vue'
 import MyProfileView from '@/views/MyProfileView.vue'
 
+import { useAuthStore } from '@/stores/useAuth'
+import Cookies from 'js-cookie'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0, behavior: 'smooth' };
+  },
   routes: [
     {
       path: '/',
@@ -34,24 +40,59 @@ const router = createRouter({
     {
       path: '/create',
       name: 'create',
-      component: CreateView
+      component: CreateView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/my-blogs',
       name: 'my-blogs',
-      component: MyBlogsView
+      component: MyBlogsView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/my-blogs/:id',
       name: 'my-blog',
-      component: MyBlogView
+      component: MyBlogView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/me',
       name: 'me',
-      component: MyProfileView
+      component: MyProfileView,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
+
+router.beforeEach(async (to, from, next) => {
+  let token = Cookies.get("token");
+
+  let authStore = useAuthStore()
+  let { checkAuth } = authStore
+
+  let res = await checkAuth()
+
+  if (to.meta.requiresAuth) {
+    if (!token) {
+      next({ path: '/' });
+    }
+    
+    if (res.valid) {
+      next();
+    } else {
+      next({ path: '/' });
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

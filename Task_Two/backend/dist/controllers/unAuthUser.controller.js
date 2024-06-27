@@ -2,26 +2,28 @@ import Blog from "../model/blog.model.js";
 async function getBlogs(req, res) {
     try {
         let blogSet = parseInt(req.query.p) || 0;
-        let blogsPerSet = 3;
+        let blogsPerSet = 6;
         let blogCategory = req.query.category;
-        let blog;
+        let blogs;
         if (!blogCategory) {
-            blog = await Blog.find()
+            blogs = await Blog.find()
+                .sort({ createdAt: -1 })
                 .skip(blogSet * blogsPerSet)
                 .limit(blogsPerSet);
         }
         else {
-            blog = await Blog.find({ category: blogCategory })
+            blogs = await Blog.find({ category: blogCategory })
                 .skip(blogSet * blogsPerSet)
                 .limit(blogsPerSet);
         }
-        if (blog.length == 0) {
+        if (blogs.length === 0) {
             res.status(200).json({
-                msg: "You've caught up with all the blogs",
+                msg: "You've caught up with all the blogs.",
+                allRetrieved: true,
             });
         }
         else {
-            res.status(200).json({ msg: blog });
+            res.status(200).json({ msg: blogs, allRetrieved: false });
         }
     }
     catch (error) {

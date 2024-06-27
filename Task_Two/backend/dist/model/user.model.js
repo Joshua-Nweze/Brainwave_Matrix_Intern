@@ -1,4 +1,8 @@
 import mongoose, { Schema } from "mongoose";
+let profilePicSchema = new Schema({
+    path: { type: String, default: null },
+    imageBase64: { type: String, default: null },
+});
 let userSchema = new Schema({
     firstName: {
         type: String,
@@ -12,6 +16,7 @@ let userSchema = new Schema({
         type: String,
         required: [true, 'Email is required']
     },
+    profilePic: profilePicSchema,
     password: {
         type: String,
         required: [true, 'Password is required']

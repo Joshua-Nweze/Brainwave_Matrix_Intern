@@ -1,4 +1,8 @@
 import mongoose, { Schema } from "mongoose";
+const thumbnailSchema = new Schema({
+    path: { type: String, required: true },
+    imageBase64: { type: String, required: true },
+});
 const commentSchema = new Schema({
     id: { type: String, required: true },
     name: { type: String, required: true },
@@ -16,7 +20,7 @@ let blogSchema = new Schema({
         required: [true, "Blog title is required"],
     },
     thumbnail: {
-        type: String,
+        type: thumbnailSchema,
         required: [true, "Blog thumbnail is required"],
     },
     category: {

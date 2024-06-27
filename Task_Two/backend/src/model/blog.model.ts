@@ -9,19 +9,29 @@ export interface IComment {
     created_at: Date
 }
 
+interface IThumbnail {
+    path: string;
+    imageBase64: string
+}
+
 interface ILikedBy {
     id: string
 }
 export interface IBlog extends Document {
     id: string; // id of user
     title: string;
-    thumbnail: string;
+    thumbnail: IThumbnail;
     category: string;
     body: string;
     likes: number;
     likedBy: ILikedBy[];
     comments: IComment[];
 }
+
+const thumbnailSchema = new Schema<IThumbnail>({
+    path: { type: String, required: true },
+    imageBase64: { type: String, required: true },
+})
 
 const commentSchema = new Schema<IComment>({
     id: { type: String, required: true },
@@ -41,7 +51,7 @@ let blogSchema = new Schema<IBlog>({
         required: [true, "Blog title is required"],
     },
     thumbnail: {
-        type: String,
+        type: thumbnailSchema,
         required: [true, "Blog thumbnail is required"],
     },
     category: {

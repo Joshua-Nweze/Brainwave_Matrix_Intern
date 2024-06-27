@@ -20,8 +20,8 @@ const checkIfDirExists = (filePath) => {
 // Multer setup for thubmnail file upload
 const thumbnailStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        checkIfDirExists('uploads/thumbnail/*');
-        cb(null, 'uploads/thumbnail/');
+        checkIfDirExists('public/thumbnail/*');
+        cb(null, 'public/thumbnail/');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
@@ -30,8 +30,8 @@ const thumbnailStorage = multer.diskStorage({
 // Multer setup for dp file upload
 const profilePicStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        checkIfDirExists('uploads/profilePic/*');
-        cb(null, 'uploads/profilePic/');
+        checkIfDirExists('public/profilePic/*');
+        cb(null, 'public/profilePic/');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);

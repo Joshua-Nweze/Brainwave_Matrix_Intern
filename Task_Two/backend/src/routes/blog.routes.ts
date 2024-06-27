@@ -4,7 +4,7 @@ import multerFuncs from '../utils/multer.js'
 
 let { uploadThumbnail } = multerFuncs
 
-let { createBlog, deleteBlog, likeBlog, commentBlog, deleteComment, editBlog } = blogController
+let { createBlog, deleteBlog, likeBlog, commentBlog, deleteComment, editBlog, getUserBlogs } = blogController
 let router = express.Router()
 
 let blogThumbnailUploadr = uploadThumbnail.single('thumbnail')
@@ -33,5 +33,7 @@ router.patch('/edit', (req: Request, res: Response) => {
             editBlog(req, res)
         })
 })
+
+router.get('/my-blogs', (req: Request, res: Response) => getUserBlogs(req, res))
 
 export default router

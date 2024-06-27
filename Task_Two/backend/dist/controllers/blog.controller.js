@@ -8,8 +8,12 @@ async function createBlog(req, res) {
     try {
         if (req.body && typeof req.body === "object") {
             let blogData = req.body;
-            if (blogData) {
-                blogData.thumbnail = req.file?.path;
+            if (req.file) {
+                let thumbnailPath = req.file.path;
+                const imageBuffer = fs.readFileSync(thumbnailPath);
+                // Encode the image buffer as a Base64 string
+                const imageBase64 = imageBuffer.toString('base64');
+                blogData.thumbnail = { path: thumbnailPath, imageBase64: imageBase64 };
             }
             let newBlog = new Blog(blogData);
             let createNewBlog = await newBlog.save();
@@ -89,6 +93,15 @@ async function commentBlog(req, res) {
     try {
         // let { id, name: profilePic, comment, blogId } = req.body
         let commentData = req.body;
+        // let commentData = req.body
+        commentData.comment = commentData.comment.trim();
+        if (commentData.comment == "" || !commentData.comment) {
+            res.status(401).json({
+                msg: "Comment must not be empty",
+                status: 401
+            });
+            return;
+        }
         let blog = await Blog.findById(commentData.blogId);
         if (blog) {
             const comment = await Blog.findByIdAndUpdate(commentData.blogId, {
@@ -122,7 +135,7 @@ async function deleteComment(req, res) {
     try {
         let { blogId, commentId, userId } = req.body;
         if (!blogId || !commentId || !userId) {
-            res.status(400).json({ msg: "Missign re.body values." });
+            res.status(400).json({ msg: "Missign req.body values." });
             return;
         }
         let blog = await Blog.findById(blogId);
@@ -160,7 +173,7 @@ async function deleteBlog(req, res) {
         if (blog) {
             if (blog.id == id) {
                 await Blog.findByIdAndDelete(blogId);
-                fs.unlinkSync(blog.thumbnail);
+                fs.unlinkSync(blog.thumbnail.path);
                 res.status(200).json({ msg: "Blog deleted" });
             }
             else {
@@ -169,6 +182,22 @@ async function deleteBlog(req, res) {
         }
         else {
             res.status(500).json({ msg: "Something went wrong, try again later." });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Something went wrong, try again later." });
+    }
+}
+async function getUserBlogs(req, res) {
+    try {
+        let { id } = req.query;
+        let blog = await Blog.find({ id }).sort({ createdAt: -1 });
+        if (blog) {
+            res.status(200).json({ msg: blog });
+        }
+        else {
+            res.status(404).json({ msg: "You do not have any blogs." });
         }
     }
     catch (error) {
@@ -191,12 +220,28 @@ async function editBlog(req, res) {
                 res.status(403).json({ msg: "You do not have access to perform this action." });
                 return;
             }
+            let data = {
+                id: blogData.id,
+                title: blogData.title,
+                category: blogData.category,
+                body: blogData.body
+            };
             // delete existing thumbnail if thumbnail is updated
             if (req.file) {
-                fs.unlinkSync(blog.thumbnail);
-                blogData.thumbnail = req.file?.path;
+                fs.unlinkSync(blog.thumbnail.path);
+                let thumbnailPath = req.file.path;
+                const imageBuffer = fs.readFileSync(thumbnailPath);
+                // Encode the image buffer as a Base64 string
+                const imageBase64 = imageBuffer.toString('base64');
+                data = {
+                    id: blogData.id,
+                    title: blogData.title,
+                    category: blogData.category,
+                    body: blogData.body,
+                    thumbnail: { path: thumbnailPath, imageBase64: imageBase64 }
+                };
             }
-            let updateBlog = await Blog.findByIdAndUpdate(blogId, blogData, { new: true });
+            let updateBlog = await Blog.findByIdAndUpdate(blogId, data, { new: true });
             if (updateBlog) {
                 res.status(200).json({ msg: "Blog updated.", blog: updateBlog });
             }
@@ -216,6 +261,7 @@ export default {
     likeBlog,
     commentBlog,
     deleteComment,
-    editBlog
+    editBlog,
+    getUserBlogs
 };
 //# sourceMappingURL=blog.controller.js.map
