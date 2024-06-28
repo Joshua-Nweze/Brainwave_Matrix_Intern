@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="mt-8 block lg:hidden">
-            <SearchBar />
+            <!-- <SearchBar /> -->
         </div>
 
         <div class="mt-5 lg:mt-8 text-2xl md:text-4xl">My blogs</div>

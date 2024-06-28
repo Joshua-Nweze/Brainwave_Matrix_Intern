@@ -129,8 +129,8 @@
                                             </div>
 
                                             <div class="py-3 sm:flex sm:flex-row-reverse gap-3">
-                                                <Button class="bg-blue-700 hover:bg-blue-800 inline-flex w-full sm:w-auto text-center" type="submit">Update blog</Button>
-                                                <Button type="button" class="ring-1 ring-gray-300 text-slate-600 hover:bg-gray-50 inline-flex w-full sm:w-auto" @click="showEditModal = false">Cancel</Button>
+                                                <Button class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto" type="submit">Update blog</Button>
+                                                <Button type="button"class="inline-flex w-full bg-slate-100 justify-center rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm sm:ml-3 sm:w-auto mt-3 sm:mt-0" @click="showEditModal = false">Cancel</Button>
                                             </div>
 
                                         </form>

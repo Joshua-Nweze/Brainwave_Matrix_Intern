@@ -27,14 +27,14 @@
                             
                         </form>
     
-                        <div class="inline-flex items-center justify-center w-full">
+                        <!-- <div class="inline-flex items-center justify-center w-full">
                             <hr class="w-full h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                             <span class="absolute px-3 font-medium text-gray-900 mb-1 bg-gray-100">or</span>
                         </div>
     
                         <div>
                             <SignWithGoogleBtn text="Continue with Google"/>
-                        </div>
+                        </div> -->
 
                         <div class="text-center text-sm mt-5">
                             Dont' have an account? <RouterLink to="/signup" class="text-blue-600">Create an account</RouterLink>

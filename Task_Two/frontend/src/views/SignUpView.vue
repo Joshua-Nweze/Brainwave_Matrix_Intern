@@ -12,25 +12,25 @@
                     </div>
     
                     <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-                        <form class="space-y-4">
+                        <form class="space-y-4" @submit.prevent="createAcc">
                             <div>
-                                <input type="text" name="firstname" placeholder="First name" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                <input v-model="firstName"type="text" name="firstname" placeholder="First name" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                             </div>
     
                             <div>
-                                <input type="text" name="lastname" placeholder="Last name" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                <input type="text" v-model="lastName" name="lastname" placeholder="Last name" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                             </div>
     
                             <div>
-                                <input name="email" type="email" placeholder="Email" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                <input name="email" v-model="email" type="email" placeholder="Email" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                             </div>
     
                             <div>
-                                <input name="password" type="password" placeholder="Password" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                <input name="password" type="password" v-model="password" placeholder="Password" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                             </div>
     
                             <div>
-                                <input name="password" type="password" placeholder="Comfirm password" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
+                                <input name="password" type="password" v-model="confirmPassword" placeholder="Comfirm password" required class="block w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2">
                             </div>
     
                             <div>
@@ -38,7 +38,7 @@
                             </div>
                             
                         </form>
-    
+<!--     
                         <div class="inline-flex items-center justify-center w-full">
                             <hr class="w-full h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                             <span class="absolute px-3 font-medium text-gray-900 mb-1 bg-gray-100">or</span>
@@ -46,7 +46,7 @@
     
                         <div>
                             <SignWithGoogleBtn text="Continue with Google"/>
-                        </div>
+                        </div> -->
 
                         <div class="text-center text-sm mt-5">
                             Already have an account? <RouterLink to="/login" class="text-blue-600">Login</RouterLink>
@@ -57,10 +57,54 @@
             </div>
         </div>
     </div>
+
+    <Transition>
+        <ToastNotification :feedback="feedback" v-if="feedback"/>
+    </Transition>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import SignWithGoogleBtn from '../components/SignWithGoogleBtn.vue'
+import { useAuthStore } from '@/stores/useAuth';
+
+let authStore = useAuthStore()
+let { createAccount } = authStore
+
+let firstName = ref<string>('')
+let lastName = ref<string>('')
+let email = ref<string>('')
+let password = ref<string>('')
+let confirmPassword = ref<string>('')
+
+let feedback = ref<any>(null)
+
+async function createAcc() {
+    feedback.value = null;
+
+    if (password.value != confirmPassword.value) {
+        feedback.value = {
+            status: 400,
+            msg: "Password and password confirmation must match"
+        }
+        return
+    }
+
+    let req = await createAccount({
+        firstName: firstName.value,
+        lastName: lastName.value,
+        email: email.value,
+        password: password.value
+    })
+    feedback.value = req
+
+}    clearFeedBack()
+
+function clearFeedBack() {
+    setTimeout(() => {
+        feedback.value = null
+    }, 3000)
+}
 </script>
 
 <style scoped>

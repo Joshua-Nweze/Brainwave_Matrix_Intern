@@ -19,6 +19,7 @@ async function createAccount(req, res) {
     try {
         if (req.body && typeof req.body === "object") {
             let userData = req.body;
+            console.log(userData);
             let existingAccount = await User.findOne({ email: userData.email });
             if (existingAccount) {
                 res.status(400).json({ msg: "Account with email exists." });

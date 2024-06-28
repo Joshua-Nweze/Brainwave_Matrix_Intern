@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import Cookies from "js-cookie";
+import type { IUser } from '../types/UserTypes'
 
 interface ProfilePic {
     path: string;
@@ -95,6 +96,25 @@ export const useAuthStore = defineStore("auth", {
         logout(){
             Cookies.remove("token")
             this.user = null
+        },
+
+        async createAccount(data: any) {
+            console.log(JSON.stringify(data))
+            let req = await fetch(
+                `${import.meta.env.VITE_API_HOST}/api/auth/create`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify(data)
+                }
+            );
+            let res = await req.json()
+            console.log(res)
+
+            return {
+                msg: res.msg,
+                status: req.status,
+            };
         }
     },
 });

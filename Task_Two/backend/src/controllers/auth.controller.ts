@@ -35,7 +35,8 @@ async function createAccount(req: Request, res: Response): Promise<void> {
     // TODO: add func to send otp
     try {
         if (req.body && typeof req.body === "object") {
-            let userData: Partial<IUser> = req.body as Partial<IUser>;
+            let userData: Partial<IUser> = req.body;
+            console.log(userData)
 
             let existingAccount = await User.findOne({ email: userData.email });
 
