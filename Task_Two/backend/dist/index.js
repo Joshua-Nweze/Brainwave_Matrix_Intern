@@ -19,7 +19,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'veeblog.netlify.app'],
     credentials: true
 }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
