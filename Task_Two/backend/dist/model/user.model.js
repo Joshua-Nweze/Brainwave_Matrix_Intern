@@ -17,7 +17,7 @@ let userSchema = new Schema({
         required: [true, 'Email is required'],
         unique: true
     },
-    profilePic: { profilePicSchema },
+    profilePic: profilePicSchema,
     password: {
         type: String,
         required: [true, 'Password is required']

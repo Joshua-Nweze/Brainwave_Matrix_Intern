@@ -34,7 +34,7 @@ let userSchema = new Schema<IUser>({
         required: [true, 'Email is required'],
         unique: true
     },
-    profilePic: {profilePicSchema},
+    profilePic: profilePicSchema,
     password: {
         type: String,
         required: [true, 'Password is required']
