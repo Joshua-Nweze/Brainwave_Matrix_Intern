@@ -1,14 +1,14 @@
 <template>
-    <div class="grid my-10 lg:mx-40">
+    <div class="grid my-10 lg:mx-40 ">
         <div class="flex flex-col gap-5">
-            <div v-if="!newProfilePicUrl">
-                <img v-if="user?.profilePic.imageBase64" class="h-32 w-32 lg:h-40 lg:w-40 rounded-full" :src="`data:image/jpeg;base64,${user?.profilePic.imageBase64}`" alt="profilePicture">
-                <img v-else class="h-32 w-32 lg:h-40 lg:w-40 rounded-full" :src="`https://ui-avatars.com/api/?name=${user?.firstName}+${user?.lastName}&background=1d4ed8&color=ffffff`" alt="">
+            <div v-if="!newProfilePicUrl" class="w-fit">
+                <img v-if="user?.profilePic" class="h-32 w-32 lg:h-40 lg:w-40 rounded-full" :src="`data:image/jpeg;base64,${user?.profilePic.imageBase64}`" alt="profilePicture">
+                <img v-else class="h-32 w-32 overflow-hidden lg:h-40 lg:w-40 rounded-full" :src="`https://ui-avatars.com/api/?name=${user?.firstName}+${user?.lastName}&background=1d4ed8&color=ffffff`" alt="">
             </div>
             <img v-else class="h-32 w-32 lg:h-40 lg:w-40 rounded-full" :src="newProfilePicUrl" alt="">
 
-            <div>
-                <Button class="bg-blue-700 hover:bg-blue-800">
+            <div class="max-w-32">
+                <Button class="bg-blue-700 hover:bg-blue-800 w-fit">
                     <label for="files" class="btn hover:cursor-pointer">
                         Choose image
                     </label>

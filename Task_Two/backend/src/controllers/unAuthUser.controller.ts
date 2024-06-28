@@ -9,7 +9,7 @@ async function getBlogs(req: Request, res: Response) {
         let blogCategory = req.query.category;
 
         let blogs;
-
+        // handle pagination
         if (!blogCategory) {
             blogs = await Blog.find()
                 .sort({ createdAt: -1 })
@@ -40,6 +40,10 @@ async function getBlog(req: Request, res: Response) {
         let id = req.query.id;
 
         let blog = await Blog.findById(id);
+        // get newest comments first 
+        if (blog?.comments && blog.comments.length > 0) {
+            blog.comments = blog.comments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        }
 
         if (blog) {
             res.status(200).json({ msg: blog });

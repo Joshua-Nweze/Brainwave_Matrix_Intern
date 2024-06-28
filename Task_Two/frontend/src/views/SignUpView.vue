@@ -67,6 +67,9 @@
 import { ref } from 'vue';
 import SignWithGoogleBtn from '../components/SignWithGoogleBtn.vue'
 import { useAuthStore } from '@/stores/useAuth';
+import type { IUser } from '@/types/UserTypes';
+import ToastNotification from '@/components/ToastNotification.vue';
+import router from '@/router';
 
 let authStore = useAuthStore()
 let { createAccount } = authStore
@@ -90,18 +93,25 @@ async function createAcc() {
         return
     }
 
-    let req = await createAccount({
+    let data = {
         firstName: firstName.value,
         lastName: lastName.value,
         email: email.value,
         password: password.value
-    })
+    }
+
+    let req = await createAccount(data)
     feedback.value = req
 
-}    clearFeedBack()
+    clearFeedBack()
+}
 
-function clearFeedBack() {
+async function clearFeedBack() {
     setTimeout(() => {
+        if(feedback.value?.status == 200 || feedback.value?.status == 201) {
+            router.push("/login")
+        }
+
         feedback.value = null
     }, 3000)
 }

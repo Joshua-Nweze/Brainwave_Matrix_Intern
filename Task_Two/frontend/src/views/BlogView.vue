@@ -41,7 +41,7 @@
                                         </div>
                                         <Button class="bg-blue-700 hover:bg-blue-800" type="submit">Post comment</Button>
                                     </form>
-                                    <article class="p-6 text-base bg-white rounded-lg" v-if="blog.comments.length > 0" v-for="comment in blog.comments">
+                                    <article class="p-6 text-base bg-white rounded-lg" v-if="blog.comments.length > 0" v-for="comment in (blog.comments)">
                                         <footer
                                             class="flex justify-between items-center mb-2 w-full">
                                             <div class="flex items-center flex-2/3">
@@ -54,7 +54,7 @@
                                                         alt=""
                                                         loading="lazy"
                                                     />
-                                                    <img v-else class="h-6 w-6 rounded-full" :src="`https://ui-avatars.com/api/?name=${comment.name}&background=1d4ed8&color=ffffff`" alt="">
+                                                    <img v-else class="h-6 w-6 mr-2 rounded-full" :src="`https://ui-avatars.com/api/?name=${comment.name}&background=1d4ed8&color=ffffff`" alt="">
                                                     {{ comment.name }}
                                                 </p>
                                                 <p class="text-sm text-gray-600">{{ new Date(comment.created_at).toDateString() }}</p>

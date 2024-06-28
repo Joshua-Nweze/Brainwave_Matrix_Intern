@@ -98,12 +98,13 @@ export const useAuthStore = defineStore("auth", {
             this.user = null
         },
 
-        async createAccount(data: any) {
-            console.log(JSON.stringify(data))
+        async createAccount(data: Partial<IUser>) {
+            console.log(data)
             let req = await fetch(
                 `${import.meta.env.VITE_API_HOST}/api/auth/create`,
                 {
                     method: "POST",
+                    headers: { "Content-type": "application/json" },
                     credentials: "include",
                     body: JSON.stringify(data)
                 }

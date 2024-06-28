@@ -25,7 +25,7 @@
                                 Comments ({{ blog?.comments.length }})
                             </h2>
                         </div>
-                        <article class="p-6 text-base bg-white rounded-lg" v-if="blog?.comments.length" v-for="comment in blog?.comments">
+                        <article class="p-6 text-base bg-white rounded-lg" v-if="blog?.comments.length" v-for="comment in (blog?.comments).reverse()">
                             <footer
                                 class="flex justify-between items-center mb-2 w-full">
                                 <div class="flex items-center flex-2/3">

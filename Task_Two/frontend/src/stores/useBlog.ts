@@ -107,6 +107,7 @@ export const useBlogStore = defineStore("blog", {
 		async likeBlog(blogId: string){	
 			let authStore = useAuthStore()
 			let { user } = storeToRefs(authStore)
+			console.log(user.value)
 
 			if (user.value) {
 				let req = await fetch(`${import.meta.env.VITE_API_HOST}/api/blog/like`, {
@@ -146,6 +147,13 @@ export const useBlogStore = defineStore("blog", {
 			}
 
 			if (user.value) {
+				let profilePic: any
+				if (user.value.profilePic) {
+					profilePic = user.value.profilePic.imageBase64
+				} else {
+					profilePic = null
+				}
+
 				let req = await fetch(`${import.meta.env.VITE_API_HOST}/api/blog/comment`, {
 					method: 'PATCH',
 					headers: { 'Content-type': 'application/json' },
@@ -154,7 +162,7 @@ export const useBlogStore = defineStore("blog", {
 						comment,
 						id: user.value._id,
 						name: `${user.value.firstName} ${user.value.lastName}`,
-						profilePic: user.value.profilePic.imageBase64
+						profilePic
 					}),
 					credentials: 'include'
 
