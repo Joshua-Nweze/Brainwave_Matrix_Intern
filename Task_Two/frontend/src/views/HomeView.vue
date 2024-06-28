@@ -25,8 +25,6 @@ let { getBlogs } = blogStore
 let { blogs } = storeToRefs(blogStore)
 
 onMounted(async () => {
-    if (!blogs.value) {
-        await getBlogs()
-    }
+    await getBlogs()
 })
 </script>

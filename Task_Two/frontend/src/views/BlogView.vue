@@ -1,7 +1,19 @@
 <template>
     <div>
         <div v-if="blog" class="grid lg:grid-cols-4 my-10 gap-5">
+
             <div class="lg:col-span-3">
+                <div v-if="blogOwner" class="flex gap-3 items-center mb-5">
+                    <div>
+                        <img v-if="blogOwner.profilePic" class="h-8 w-8 rounded-full" :src="`data:image/jpeg;base64,${blogOwner?.profilePic.imageBase64}`" alt="profilePicture">
+                        <img v-else class="h-8 w-8 rounded-full" :src="`https://ui-avatars.com/api/?name=${blogOwner?.firstName}+${blogOwner?.lastName}&background=1d4ed8&color=ffffff`" alt="">
+                    </div>
+                    <div class="text-sm font-semibold">
+                        {{ blogOwner.firstName }} {{ blogOwner.lastName }}
+                    </div>
+
+                    <div class="text-xs text-slate-400">{{ new Date(blog.createdAt).toDateString() }}</div>
+                </div>
                 <div>
                     <div v-if="typeof blog != 'string'">
                         <div class="font-medium text-2xl lg:text-4xl">
@@ -155,9 +167,10 @@ import { useAuthStore } from "@/stores/useAuth";
 import { storeToRefs } from "pinia";
 import ToastNotification from "../components/ToastNotification.vue";
 import type { IBlog } from "../types/BlogTypes";
+import type { IUser } from "../types/UserTypes"
 
 const authStore = useAuthStore();
-const { getUserProfilePic } = authStore;
+const { getUserProfilePic, getUser } = authStore;
 const { user } = storeToRefs(authStore);
 
 const blogStore = useBlogStore();
@@ -169,6 +182,8 @@ const blogId = ref<string>(route.params.id as string);
 const blog = ref<IBlog | null>(null);
 const feedback = ref<any>(null);
 const comment = ref<string>("");
+
+let blogOwner = ref<any>(null)
 
 async function likeBlogBtn() {
     const res = await likeBlog(blogId.value);
@@ -238,6 +253,19 @@ watch(
         blog.value = null;
         blog.value = await getBlog(newId as string);
         await fetchProfilePics();
+    }
+);
+
+watch(
+    () => blog.value, // Watch the blog.value directly
+    async (newBlog, oldBlog) => {
+        if (newBlog) {
+            console.log('Watching blog changes:', newBlog.id);
+            let req = await fetch(`${import.meta.env.VITE_API_HOST}/api/auth/get-user?id=${newBlog.id}`);
+            let res = await req.json()
+            
+            blogOwner.value = res.msg
+        }
     }
 );
 

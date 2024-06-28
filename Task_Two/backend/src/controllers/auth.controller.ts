@@ -158,9 +158,15 @@ async function deleteAccount(req: Request, res: Response) {
 
 async function getUser(req: Request, res: Response) {
     try { 
-        let { email } = req.query;
+        let { email, id } = req.query;
 
-        let user = await User.findOne({ email }).select('-password -createdAt -updatedAt');
+        let user
+        if (id) {
+            user = await User.findById(id).select('-password -createdAt -updatedAt');
+        }
+        if(email) {
+            user = await User.findOne({ email }).select('-password -createdAt -updatedAt');
+        }
         
         if (user) {
             res.status(200).json({ msg: user })
