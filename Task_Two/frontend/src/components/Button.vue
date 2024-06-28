@@ -1,5 +1,5 @@
 <template>
-    <button class="text-white font-medium rounded-lg text-sm px-4 py-2">
+    <button class="font-medium rounded-lg text-sm px-4 py-2">
       <slot></slot>
     </button>
 </template>
