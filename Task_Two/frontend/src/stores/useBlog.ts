@@ -38,16 +38,20 @@ export const useBlogStore = defineStore("blog", {
                 const newBlogs: IBlog[] = res.msg;
 				this.allRetrieved = res.allRetrieved
 
-				// console.log(res.msg)
+				// console.log(res.allRetrieved)
 				if (this.allRetrieved) {
                     return;
                 }
 
                 if (!this.blogs) {
-                    this.blogs = newBlogs;
-                } else {
-                    this.blogs.push(...newBlogs);
-                }
+					this.blogs = newBlogs.filter(newBlog => !this.blogs?.find(blog => blog.id === newBlog.id));
+				} else {
+					newBlogs.forEach(newBlog => {
+						if (!this.blogs?.find(blog => blog.id === newBlog.id)) {
+							this.blogs?.push(newBlog);
+						}
+					});
+				}
 
                 this.page++; 
 

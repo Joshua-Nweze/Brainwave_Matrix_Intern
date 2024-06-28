@@ -19,9 +19,8 @@
                 {{ blogs }}
             </div>
         </div>
-
+            
         <BlogsSkeletonLoader v-else />
-
         <div ref="loadMore" class="my-5">
             <SpinnerLoader v-if="fetchingMoreBlogs && blogs" class="flex justify-center" />
             <div class="text-center" v-if="typeof blogs != 'string' && allRetrieved">You've caught up with all the blogs.</div>
