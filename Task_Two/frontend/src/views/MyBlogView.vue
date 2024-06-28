@@ -6,7 +6,7 @@
         </div>
         <div>
             <div class="font-medium text-2xl lg:text-4xl">{{ blog?.title }}</div>
-            <div>
+            <div v-if="blog?.thumbnail">
                 <img :src="`data:image/jpeg;base64,${blog?.thumbnail.imageBase64}`" alt="" />
             </div>
             <div :innerHTML="blog?.body"></div>
@@ -130,7 +130,7 @@
 
                                             <div class="py-3 sm:flex sm:flex-row-reverse gap-3">
                                                 <Button class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto" type="submit">Update blog</Button>
-                                                <Button type="button"class="inline-flex w-full bg-slate-100 justify-center rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm sm:ml-3 sm:w-auto mt-3 sm:mt-0" @click="showEditModal = false">Cancel</Button>
+                                                <Button type="button"class="inline-flex w-full bg-[#f1f5f9] text-black justify-center rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm sm:ml-3 sm:w-auto mt-3 sm:mt-0" @click="showEditModal = false">Cancel</Button>
                                             </div>
 
                                         </form>
@@ -273,8 +273,20 @@ function clearFeedBack() {
         feedback.value = null
     }, 3000)
 }
+
+const fetchProfilePics = async () => {
+    if (blog.value) {
+        for (const comment of blog.value.comments) {
+            const profilePic = await authStore.getUserProfilePic(comment.id);
+            comment.profilePic = profilePic.profilePic.imageBase64;
+        }
+    }
+};
+
 onMounted(async () => {
     blog.value = await getBlog(blogId)
+
+    await fetchProfilePics()
 
     title.value = blog.value?.title as string
     category.value = blog.value?.category as string
