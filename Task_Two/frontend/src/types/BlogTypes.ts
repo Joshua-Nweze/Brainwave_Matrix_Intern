@@ -28,4 +28,5 @@ export interface IBlog {
     likes: number;
     likedBy: ILikedBy[];
     comments: IComment[];
+    createdAt: Date
 }
