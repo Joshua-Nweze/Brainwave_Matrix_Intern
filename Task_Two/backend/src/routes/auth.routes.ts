@@ -3,7 +3,7 @@ import authController from "../controllers/auth.controller.js";import multerFunc
 
 let { uploadProfilePic } = multerFuncs
 
-let { createAccount, login, deleteAccount, getUser, editAccount, changePassword } = authController;
+let { createAccount, login, deleteAccount, getUser, editAccount, changePassword, getUserProfilePic } = authController;
 let router = express.Router()
 
 let profilePicUploadr = uploadProfilePic.single('profilePic')
@@ -12,6 +12,7 @@ router.post('/create', (req: Request, res: Response) => createAccount(req, res))
 router.post('/login', (req: Request, res: Response) => login(req, res));
 router.delete('/delete', (req: Request, res: Response) => deleteAccount(req, res));
 router.get('/get-user', (req: Request, res: Response) => getUser(req, res))
+router.get('/get-user-dp', (req: Request, res: Response) => getUserProfilePic(req, res))
 
 router.patch('/edit', (req: Request, res: Response) => {
     profilePicUploadr(req, res, function (err) {

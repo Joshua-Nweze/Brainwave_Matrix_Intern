@@ -116,6 +116,17 @@ export const useAuthStore = defineStore("auth", {
                 msg: res.msg,
                 status: req.status,
             };
+        },
+
+        async getUserProfilePic(id: string) {
+            let req = await fetch(`${import.meta.env.VITE_API_HOST}/api/auth/get-user-dp?id=${id}`);
+            let res = await req.json()
+            
+            if (req.status == 200) {
+                return res.msg
+            } else {
+                return "Not found"
+            }
         }
     },
 });

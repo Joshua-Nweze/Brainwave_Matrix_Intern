@@ -23,7 +23,6 @@ app.use(cors({
     credentials: true
 }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
-console.log(__dirname);
 app.use('/api/auth', authRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api', unAuthRoutes);

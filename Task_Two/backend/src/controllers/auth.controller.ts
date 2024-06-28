@@ -256,11 +256,28 @@ async function editAccount(req: Request, res: Response) {
     }
 }
 
+async function getUserProfilePic(req: Request, res: Response) {
+    try {
+        let id = req.query.id as string
+
+        let user = await User.findById(id).select('profilePic')
+
+        if (user) {
+           res.status(200).json({ msg: user }) 
+        } else {
+           res.status(404).json({ msg: "Profile picture not found" }) 
+        }
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong, try again later." + error });
+    }    
+}
+
 export default {
     createAccount,
     login,
     deleteAccount,
     getUser,
     editAccount,
-    changePassword
+    changePassword,
+    getUserProfilePic
 };
