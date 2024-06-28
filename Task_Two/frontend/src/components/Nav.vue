@@ -16,7 +16,7 @@
                 <div class="absolute inset-y-0 right-0 flex justify-end items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                     <div class="relative ml-3 flex gap-3">
                         <RouterLink v-if="!user" to="/login">
-                            <Button class="bg-blue-700 hover:bg-blue-800">Login</Button>
+                            <Button class="bg-blue-700 hover:bg-blue-800 text-white">Login</Button>
                         </RouterLink>
                         <div @click="postBlogBtn">
                             <Button class="bg-white text-[#1d4ed8]">Post a blog</Button>

@@ -8,7 +8,7 @@
             <img v-else class="h-32 w-32 lg:h-40 lg:w-40 rounded-full" :src="newProfilePicUrl" alt="">
 
             <div class="max-w-32">
-                <Button class="bg-blue-700 hover:bg-blue-800 w-fit">
+                <Button class="bg-blue-700 hover:bg-blue-800 w-fit text-white">
                     <label for="files" class="btn hover:cursor-pointer">
                         Choose image
                     </label>
@@ -21,7 +21,7 @@
     
                 <input placeholder="Last name" v-model="lastName"required class="block min-w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 px-2">
     
-                <Button class="bg-blue-700 hover:bg-blue-800" type="submit">
+                <Button class="bg-blue-700 hover:bg-blue-800 text-white" type="submit">
                     Save changes
                 </Button>
             </form>
@@ -36,7 +36,7 @@
 
                 <input v-model="confirmNewPassword" placeholder="Confirm new password" required class="block min-w-full text-base rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 px-2">
     
-                <Button class="bg-blue-700 hover:bg-blue-800" type="submit">
+                <Button class="bg-blue-700 hover:bg-blue-800 text-white" type="submit">
                     Change password
                 </Button>
             </form>

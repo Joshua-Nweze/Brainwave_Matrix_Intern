@@ -23,7 +23,7 @@
                                 this blog
                             </div>
 
-                            <Button class="bg-blue-700 hover:bg-blue-800 w-fit" @click="likeBlogBtn">
+                            <Button class="bg-blue-700 hover:bg-blue-800 w-fit text-white" @click="likeBlogBtn">
                                 {{ blog.likedBy.some((liked) => liked.id === user?._id) ? "Unlike blog" : "Like blog" }}
                             </Button>
                         </div>
@@ -51,7 +51,7 @@
                                             ></textarea>
                                         </div>
                                         <Button
-                                            class="bg-blue-700 hover:bg-blue-800"
+                                            class="bg-blue-700 hover:bg-blue-800 text-white"
                                             type="submit"
                                             >Post comment</Button
                                         >

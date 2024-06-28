@@ -26,7 +26,7 @@
                 ></QuillEditor>
             </div>
 
-            <Button type="submit" class="bg-blue-700 hover:bg-blue-800">Post blog</Button>
+            <Button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white">Post blog</Button>
         </form>
     </div>
     <Transition>
